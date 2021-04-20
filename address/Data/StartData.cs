@@ -25,7 +25,7 @@ namespace address.Models
                     {
                         Name = "TestAdmin",
                         Password = "testadmin",
-                        Group = 0,
+                        Group = 1,
                         RegistrationDate = DateTime.Today,
                         Email = "TestAdmin@mail.ru"
                     },
@@ -33,7 +33,7 @@ namespace address.Models
                     {
                         Name = "TestOwner",
                         Password = "testowner",
-                        Group = 0,
+                        Group = 2,
                         RegistrationDate = DateTime.Today,
                         Email = "TestOwner@mail.ru"
                     }

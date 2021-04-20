@@ -12,8 +12,8 @@
 </head>
 <body>
     <h3>Пользователи сервиса</h3>
-    <table>
-        <tr>
+    <table align="center">
+        <tr align="center">
             <td>ID</td>
             <td>Имя пользователя</td>
             <td>Группа пользователя</td>
@@ -23,11 +23,11 @@
         </tr>
         @foreach (var user in Model)
         {
-    <tr>
+    <tr align="center">
         <td>@user.Id</td>
         <td>@user.Name</td>
-        <td>@user.Group</td>
-        <td>@user.RegistrationDate</td>
+        <td>@(user.Group == 0 ? "Пользователь" : user.Group == 1 ? "Администратор" : "Владелец")</td>
+        <td>@user.RegistrationDate.Date.ToString("dd.MM.yyyy")</td>
         <td>@user.Email</td>
         <td><a href="~/Home/Edit/@user.Id">Редактировать</a></td>
     </tr>
