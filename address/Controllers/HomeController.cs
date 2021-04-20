@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using address.Data;
 
 namespace address.Controllers
 {
@@ -13,14 +14,15 @@ namespace address.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        AddressSystemContext db;
+        public HomeController(AddressSystemContext context)
         {
-            _logger = logger;
+            db = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(db.Users.ToList());
         }
 
         public IActionResult Privacy()

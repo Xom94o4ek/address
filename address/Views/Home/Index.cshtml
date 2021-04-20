@@ -1,8 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<address.Models.Users>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    //ViewData["Title"] = "Список смартфонов";
+    //Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Пользователи</title>
+</head>
+<body>
+    <h3>Пользователи сервиса</h3>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Имя пользователя</td>
+            <td>Группа пользователя</td>
+            <td>Дата регистрации</td>
+            <td>Почта</td>
+            <td></td>
+        </tr>
+        @foreach (var user in Model)
+        {
+    <tr>
+        <td>@user.Id</td>
+        <td>@user.Name</td>
+        <td>@user.Group</td>
+        <td>@user.RegistrationDate</td>
+        <td>@user.Email</td>
+        <td><a href="~/Home/Edit/@user.Id">Редактировать</a></td>
+    </tr>
+        }
+    </table>
+</body>
+</html>
