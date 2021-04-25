@@ -25,6 +25,14 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="navbar-brand" href="/Account/Cabinet">@User.Identity.Name</a>
+                    }
+                    else
+                    { 
+                        <a class="navbar-brand" href="/Account/Login">Вход</a> 
+                    }
                 </div>
             </div>
         </nav>

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using address.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace address.Controllers
 {
@@ -20,9 +21,11 @@ namespace address.Controllers
             db = context;
         }
 
+        //[Authorize] //
         public IActionResult Index()
         {
             return View(db.Users.ToList());
+            //return Content(User.Identity.Name);
         }
 
         public IActionResult Privacy()
