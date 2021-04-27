@@ -28,10 +28,11 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <a class="navbar-brand" href="/Account/Cabinet">@User.Identity.Name</a>
+                        <a class="navbar-brand" href="/Account/Logout">Выйти</a>
                     }
                     else
-                    { 
-                        <a class="navbar-brand" href="/Account/Login">Вход</a> 
+                    {
+                        <a class="navbar-brand" href="/Account/Login">Вход</a>
                     }
                 </div>
             </div>

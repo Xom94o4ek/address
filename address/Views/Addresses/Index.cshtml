@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h5>
+    Выберите регион <div id="RegAdd" style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="RegCreate">[Добавить регион]</a></h6></div>
+</h5>
+    @Html.DropDownList("Regions", ViewBag.Regions as SelectList, new { id = "region" })<div id="RegEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="RegEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="RegDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="RegDelete"><font color="red">Удалить</font></a></h6></div>
+<h5>
+    Выберите район <div id="AreaAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="AreaCreate">[Добавить район]</a></h6></div>
+</h5>
+    @Html.DropDownList("Areas", ViewBag.Areas as SelectList, new { id = "area" })<div id="AreaEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="AreaEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="AreaDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="AreaDelete"><font color="red">Удалить</font></a></h6></div>
+<h5>
+    Выберите населенный пункт <div id="LocAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="LocCreate">[Добавить населенный пункт]</a></h6></div>
+</h5>
+    @Html.DropDownList("Localities", ViewBag.Localities as SelectList, new { id = "locality" })<div id="LocEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="LocEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="LocDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="LocDelete"><font color="red">Удалить</font></a></h6></div>
+<h5>
+    Выберите ЭПС <div id="DistAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="DisCreate">[Добавить ЭПС]</a></h6></div>
+</h5>
+    @Html.DropDownList("Districts", ViewBag.Districts as SelectList, new { id = "district" })<div id="DistEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="DisEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="DisDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="DisDelete"><font color="red">Удалить</font></a></h6></div>
+<h5>
+    Выберите улицу <div id="StreetAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="StrCreate">[Добавить улицу]</a></h6></div>
+</h5>
+    @Html.DropDownList("Streets", ViewBag.Streets as SelectList, new { id = "street" })<div id="StreetEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="StrEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="StrDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="StrDelete"><font color="red">Удалить</font></a></h6></div>
+<h5>
+    Выберите дом <div id="HouseAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="HouseCreate">[Добавить дом]</a></h6></div>
+</h5>
+    @Html.DropDownList("Houses", ViewBag.Houses as SelectList, new { id = "house" })<div id="HouseEdit" style="display:none;margin-left: 20px;"><h6><a asp-controller="Operation" asp-action="HouseEdit"><font color="orange">Редактировать</font></a> | <a asp-controller="Operation" asp-action="HouseDetails"><font color="blue">Детали</font></a> | <a asp-controller="Operation" asp-action="HouseDelete"><font color="red">Удалить</font></a></h6></div>
+
+@section scripts{
+<script type="text/javascript">
+    $('#region').change();
+    $(function () {
+
+        $('#region').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            document.getElementById('RegEdit').style.display = id != null ? 'inline-block' : 'none';
+            document.getElementById('RegAdd').style.display = id != null ? 'inline-block' : 'none';
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetAreas")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('area').innerHTML = data;
+                    $('#area').change();
+                }
+            });
+        });
+        $('#area').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            document.getElementById('AreaEdit').style.display = id != null ? 'inline-block' : 'none';
+            document.getElementById('AreaAdd').style.display = id != null ? 'inline-block' : 'none';
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetLocalities")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('locality').innerHTML = data;
+                    $('#locality').change();
+                }
+            });
+        });
+        $('#locality').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            document.getElementById('LocEdit').style.display = id != null ? 'inline-block' : 'none';
+            document.getElementById('LocAdd').style.display = id != null ? 'inline-block' : 'none';
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDistricts")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('district').innerHTML = data;
+                    $('#district').change();
+                }
+            });
+        });
+        $('#district').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            document.getElementById('DistEdit').style.display = id != null ? 'inline-block' : 'none';
+            document.getElementById('DistAdd').style.display = id != null ? 'inline-block' : 'none';
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetStreets")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('street').innerHTML = data;
+                    $('#street').change();
+                }
+            });
+        });
+        $('#street').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            document.getElementById('StreetEdit').style.display = id != null ? 'inline-block' : 'none';
+            document.getElementById('StreetAdd').style.display = id != null ? 'inline-block' : 'none';
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetHouses")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('house').innerHTML = data;
+                    document.getElementById('HouseEdit').style.display = document.getElementById('house').innerText != '' ? 'inline-block' : 'none';
+                }
+            });
+        });
+    })
+    </script>
+}

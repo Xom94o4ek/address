@@ -81,7 +81,10 @@ namespace address.Controllers
                     return RedirectToAction("Login", "Account");
                 }
                 else
+                {
+                    ViewData["UsersCount"] = db.Users.Count();
                     return View(user);
+                }
             }
             return RedirectToAction("Login", "Account");
         }

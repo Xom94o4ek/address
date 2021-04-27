@@ -5,12 +5,20 @@
     //Layout = null;
 }
 
+
 <html>
 <head>
     <title>Личный кабинет</title>
 </head>
 <body>
     <h3>@User.Identity.Name @Model.Email</h3>
-    
+    <ul>
+        <li>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Просмотр/редактирование пользователей [общее кол-во @ViewData["UsersCount"]]</a>
+        </li>
+        <li>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Addresses" asp-action="Index">Просмотр/редактирование адресов</a>
+        </li>
+    </ul>
 </body>
 </html>

@@ -59,12 +59,22 @@ namespace address.Models
                 context.Areas.AddRange(
                     new Areas
                     {
-                        AreaName = "городской округ",
+                        AreaName = "Казанский городской округ",
                         RegionId = 1
                     },
                     new Areas
                     {
                         AreaName = "Балтасинский район",
+                        RegionId = 1
+                    },
+                    new Areas
+                    {
+                        AreaName = "Волгоградский городской округ",
+                        RegionId = 2
+                    },
+                    new Areas
+                    {
+                        AreaName = "Алексеевский район",
                         RegionId = 1
                     }
                 );
@@ -82,6 +92,16 @@ namespace address.Models
                     {
                         LocalityName = "Карадуванское поселение",
                         AreaId = 2
+                    },
+                    new Localities
+                    {
+                        LocalityName = "пгт Балтаси",
+                        AreaId = 2
+                    },
+                    new Localities
+                    {
+                        LocalityName = "Волгоград",
+                        AreaId = 3
                     }
                 );
                 context.SaveChanges();
@@ -98,6 +118,11 @@ namespace address.Models
                     {
                         DistrictName = "деревня Карадуван",
                         LocalityId = 2
+                    },
+                    new Districts
+                    {
+                        DistrictName = "Советский район",
+                        LocalityId = 1
                     }
                 );
                 context.SaveChanges();
@@ -114,6 +139,11 @@ namespace address.Models
                     {
                         StreetName = "ул. Родник",
                         DistrictId = 2
+                    }, 
+                    new Streets
+                    {
+                        StreetName = "ул. Чуйкова",
+                        DistrictId = 1
                     }
                 );
                 context.SaveChanges();
@@ -138,6 +168,15 @@ namespace address.Models
                         Entrances = 1,
                         Flats = 1,
                         StreetId = 2
+                    },
+                    new Houses
+                    {
+                        HouseNum = "9",
+                        Index = 420066,
+                        Floors = 9,
+                        Entrances = 6,
+                        Flats = 216,
+                        StreetId = 3
                     }
                 );
                 context.SaveChanges();
