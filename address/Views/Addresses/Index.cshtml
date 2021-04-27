@@ -29,7 +29,9 @@
 
 @section scripts{
 <script type="text/javascript">
-    $('#region').change();
+    $(document).ready(function () {
+        $('#region').change();
+    });
     $(function () {
 
         $('#region').change(function()
