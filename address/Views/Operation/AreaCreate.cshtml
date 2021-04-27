@@ -1,0 +1,49 @@
+﻿@model address.Models.Areas
+
+@{
+    ViewData["Title"] = "Добавление района";
+}
+
+<h4>Добавление района</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AreaCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AreaName" class="control-label"></label>
+                <input asp-for="AreaName" class="form-control" />
+                <span asp-validation-for="AreaName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegionId" class="control-label"></label>
+                <!--<input asp-for="RegionId" class="form-control" />-->
+                @Html.DropDownList("RegionId", ViewBag.Regions as SelectList, new { id = "region" })
+                <span asp-validation-for="RegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Добавить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="AreaIndex">Вернуться к списку</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#region').change();
+    });
+    $(function () {
+
+        $('#region').change(function () {
+            // получаем выбранный id
+
+        });
+    })
+</script>
+}

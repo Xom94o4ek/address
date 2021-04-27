@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using address.Data;
 using address.Models;
+using address.ModelsData;
 
 namespace address.Controllers
 {
@@ -35,6 +36,19 @@ namespace address.Controllers
             }
 
             return View(await regions.ToListAsync());
+        }
+        public async Task<IActionResult> AreaIndex(string id)
+        {
+            var areas = from p in _context.Areas
+                         join c in _context.Regions on p.RegionId equals c.RegionId
+                         select new DataAreas { AreaId = p.AreaId, AreaName = p.AreaName, RegionName = c.RegionName, RegionId = c.RegionId };
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                areas = areas.Where(s => s.AreaName.Contains(id));
+            }
+
+            return View(await areas.ToListAsync());
         }
 
         // GET: Operation/Details/5
@@ -70,6 +84,24 @@ namespace address.Controllers
 
             return View(regions);
         }
+        public async Task<IActionResult> AreaDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var areas = await (from p in _context.Areas
+                        join c in _context.Regions on p.RegionId equals c.RegionId
+                        select new DataAreas { AreaId = p.AreaId, AreaName = p.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.AreaId == id);
+
+            if (areas == null)
+            {
+                return NotFound();
+            }
+
+            return View(areas);
+        }
 
         // GET: Operation/Create
         /*public IActionResult Create()
@@ -78,6 +110,13 @@ namespace address.Controllers
         }*/
         public IActionResult RegCreate()
         {
+            return View();
+        }
+
+        public IActionResult AreaCreate()
+        {
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", 1);
+            ViewBag.Regions = regions;
             return View();
         }
 
@@ -109,6 +148,19 @@ namespace address.Controllers
             return View(regions);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AreaCreate([Bind("AreaName", "RegionId")] Areas areas)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(areas);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AreaIndex));
+            }
+            return View(areas);
+        }
+
         // GET: Operation/Edit/5
         /*public async Task<IActionResult> Edit(int? id)
         {
@@ -137,6 +189,22 @@ namespace address.Controllers
                 return NotFound();
             }
             return View(regions);
+        }
+
+        public async Task<IActionResult> AreaEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var areas = await _context.Areas.FindAsync(id);
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", areas.RegionId);
+            ViewBag.Regions = regions;
+            if (areas == null)
+            {
+                return NotFound();
+            }
+            return View(areas);
         }
 
         // POST: Operation/Edit/5
@@ -204,6 +272,38 @@ namespace address.Controllers
             }
             return View(regions);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AreaEdit(int id, [Bind("AreaId,AreaName,RegionId")] Areas areas)
+        {
+            if (id != areas.AreaId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(areas);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RegionsExists(areas.AreaId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(AreaIndex));
+            }
+            return View(areas);
+        }
         // GET: Operation/Delete/5
         /*public async Task<IActionResult> Delete(int? id)
         {
@@ -246,6 +346,33 @@ namespace address.Controllers
             _context.Regions.Remove(regions);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(RegIndex));
+        }
+
+        public async Task<IActionResult> AreaDelete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var areas = await _context.Areas
+                .FirstOrDefaultAsync(m => m.AreaId == id);
+            if (areas == null)
+            {
+                return NotFound();
+            }
+
+            return View(areas);
+        }
+        // POST: Operation/Delete/5
+        [HttpPost, ActionName("AreaDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AreaDeleteConfirmed(int id)
+        {
+            var areas = await _context.Areas.FindAsync(id);
+            _context.Areas.Remove(areas);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AreaIndex));
         }
 
         private bool RegionsExists(int id)

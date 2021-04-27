@@ -1,0 +1,36 @@
+﻿@model address.ModelsData.DataAreas
+
+@{
+    ViewData["Title"] = "Детали";
+}
+
+<h1>Детали</h1>
+
+<div>
+    <h4>Районы</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AreaId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AreaId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AreaName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AreaName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegionName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegionName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="AreaEdit" asp-route-id="@Model.AreaId">Изменить</a> |
+    <a asp-action="AreaIndex">Вернуться к списку</a>
+</div>

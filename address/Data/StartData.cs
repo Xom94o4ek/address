@@ -70,7 +70,7 @@ namespace address.Models
                     new Areas
                     {
                         AreaName = "Волгоградский городской округ",
-                        RegionId = 2
+                        RegionId = 1
                     },
                     new Areas
                     {
