@@ -1,4 +1,4 @@
-﻿@model address.Models.Localities
+﻿@model address.Models.Districts
 
 @{
     ViewData["Title"] = "Редактирование";
@@ -6,17 +6,17 @@
 
 <h1>Редактирование</h1>
 
-<h4>Населенный пункт</h4>
+<h4>Элемент планировочной структуры</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="LocEdit">
+        <form asp-action="DisEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="LocalityId" />
+            <input type="hidden" asp-for="DistrictId" />
             <div class="form-group">
-                <label asp-for="LocalityName" class="control-label"></label>
-                <input asp-for="LocalityName" class="form-control" />
-                <span asp-validation-for="LocalityName" class="text-danger"></span>
+                <label asp-for="DistrictName" class="control-label"></label>
+                <input asp-for="DistrictName" class="form-control" />
+                <span asp-validation-for="DistrictName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Регион</label>
@@ -25,10 +25,16 @@
                 <span class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AreaId" class="control-label"></label>
+                <label class="control-label"></label>
                 <!--<input asp-for="RegionId" class="form-control" />-->
                 @Html.DropDownList("AreaId", ViewBag.Areas as SelectList, new { id = "area" })
-                <span asp-validation-for="AreaId" class="text-danger"></span>
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocalityId" class="control-label"></label>
+                <!--<input asp-for="RegionId" class="form-control" />-->
+                @Html.DropDownList("LocalityId", ViewBag.Localities as SelectList, new { id = "locality" })
+                <span asp-validation-for="LocalityId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-primary" />
@@ -37,14 +43,11 @@
     </div>
 </div>
 <div>
-    <a asp-action="LocIndex">Вернуться к списку</a>
+    <a asp-action="DisIndex">Вернуться к списку</a>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script type="text/javascript">
-    $(document).ready(function () {
-        $('#region').change();
-    });
+<script type="text/javascript">
     $('#region').change(function()
         {
             // получаем выбранный id
@@ -71,8 +74,23 @@
 
                     // заменяем содержимое присланным частичным представлением
                     document.getElementById('locality').innerHTML = data;
+                    $('#locality').change();
                 }
             });
         });
-    </script>
+        $('#locality').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDistricts", "Addresses")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('district').innerHTML = data;
+                }
+            });
+        });
+</script>
 }
