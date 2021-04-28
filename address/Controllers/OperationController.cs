@@ -50,7 +50,20 @@ namespace address.Controllers
 
             return View(await areas.ToListAsync());
         }
+        public async Task<IActionResult> LocIndex(string id)
+        {
+            var localities = from p in _context.Localities
+                        join b in _context.Areas on p.AreaId equals b.AreaId
+                        join c in _context.Regions on b.RegionId equals c.RegionId
+                        select new DataLocalities { LocalityId = p.LocalityId, LocalityName = p.LocalityName, AreaId = p.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId };
 
+            if (!String.IsNullOrEmpty(id))
+            {
+                localities = localities.Where(s => s.LocalityName.Contains(id));
+            }
+
+            return View(await localities.ToListAsync());
+        }
         // GET: Operation/Details/5
         /*public async Task<IActionResult> Details(int? id)
         {
@@ -102,6 +115,25 @@ namespace address.Controllers
 
             return View(areas);
         }
+        public async Task<IActionResult> LocDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var localities = await (from p in _context.Localities
+                             join b in _context.Areas on p.AreaId equals b.AreaId
+                             join c in _context.Regions on b.RegionId equals c.RegionId
+                             select new DataLocalities { LocalityId = p.LocalityId, LocalityName = p.LocalityName, AreaId = p.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.LocalityId == id);
+
+            if (localities == null)
+            {
+                return NotFound();
+            }
+
+            return View(localities);
+        }
 
         // GET: Operation/Create
         /*public IActionResult Create()
@@ -117,6 +149,14 @@ namespace address.Controllers
         {
             SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", 1);
             ViewBag.Regions = regions;
+            return View();
+        }
+        public IActionResult LocCreate()
+        {
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", 1);
+            ViewBag.Regions = regions;
+            SelectList areas = new SelectList(_context.Areas.Where(c => c.RegionId == 1), "AreaId", "AreaName", 1);
+            ViewBag.Areas = areas;
             return View();
         }
 
@@ -159,6 +199,19 @@ namespace address.Controllers
                 return RedirectToAction(nameof(AreaIndex));
             }
             return View(areas);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LocCreate([Bind("LocalityName", "AreaId")] Localities localities)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(localities);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(LocIndex));
+            }
+            return View(localities);
         }
 
         // GET: Operation/Edit/5
@@ -207,6 +260,25 @@ namespace address.Controllers
             return View(areas);
         }
 
+        public async Task<IActionResult> LocEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var localities = await _context.Localities.FindAsync(id);
+            int OurAreaId = localities.AreaId;
+            int OurRegId = (await _context.Areas.FindAsync(OurAreaId)).RegionId;
+            SelectList areas = new SelectList(_context.Areas.Where(c => c.RegionId == OurRegId), "AreaId", "AreaName", OurAreaId);
+            ViewBag.Areas = areas;
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", OurRegId);
+            ViewBag.Regions = regions;
+            if (areas == null)
+            {
+                return NotFound();
+            }
+            return View(localities);
+        }
         // POST: Operation/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -291,7 +363,7 @@ namespace address.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RegionsExists(areas.AreaId))
+                    if (!AreasExists(areas.AreaId))
                     {
                         return NotFound();
                     }
@@ -303,6 +375,37 @@ namespace address.Controllers
                 return RedirectToAction(nameof(AreaIndex));
             }
             return View(areas);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LocEdit(int id, [Bind("LocalityId,LocalityName,AreaId")] Localities localities)
+        {
+            if (id != localities.LocalityId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(localities);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LocalitiesExists(localities.LocalityId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(LocIndex));
+            }
+            return View(localities);
         }
         // GET: Operation/Delete/5
         /*public async Task<IActionResult> Delete(int? id)
@@ -354,9 +457,9 @@ namespace address.Controllers
             {
                 return NotFound();
             }
-
-            var areas = await _context.Areas
-                .FirstOrDefaultAsync(m => m.AreaId == id);
+            var areas = await (from p in _context.Areas
+                               join c in _context.Regions on p.RegionId equals c.RegionId
+                               select new DataAreas { AreaId = p.AreaId, AreaName = p.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.AreaId == id);
             if (areas == null)
             {
                 return NotFound();
@@ -375,9 +478,46 @@ namespace address.Controllers
             return RedirectToAction(nameof(AreaIndex));
         }
 
+        public async Task<IActionResult> LocDelete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var localities = await (from p in _context.Localities
+                                    join b in _context.Areas on p.AreaId equals b.AreaId
+                                    join c in _context.Regions on b.RegionId equals c.RegionId
+                                    select new DataLocalities { LocalityId = p.LocalityId, LocalityName = p.LocalityName, AreaId = p.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.LocalityId == id);
+            if (localities == null)
+            {
+                return NotFound();
+            }
+
+            return View(localities);
+        }
+        // POST: Operation/Delete/5
+        [HttpPost, ActionName("LocDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LocDeleteConfirmed(int id)
+        {
+            var localities = await _context.Localities.FindAsync(id);
+            _context.Localities.Remove(localities);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(LocIndex));
+        }
+
         private bool RegionsExists(int id)
         {
             return _context.Regions.Any(e => e.RegionId == id);
+        }
+        private bool AreasExists(int id)
+        {
+            return _context.Areas.Any(e => e.AreaId == id);
+        }
+        private bool LocalitiesExists(int id)
+        {
+            return _context.Localities.Any(e => e.LocalityId == id);
         }
     }
 }

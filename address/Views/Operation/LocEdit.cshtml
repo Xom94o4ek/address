@@ -1,0 +1,78 @@
+﻿@model address.Models.Localities
+
+@{
+    ViewData["Title"] = "Редактирование";
+}
+
+<h1>Редактирование</h1>
+
+<h4>Населенный пункт</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LocEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="LocalityId" />
+            <div class="form-group">
+                <label asp-for="LocalityName" class="control-label"></label>
+                <input asp-for="LocalityName" class="form-control" />
+                <span asp-validation-for="LocalityName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Регион</label>
+                <!--<input asp-for="RegionId" class="form-control" />-->
+                @Html.DropDownList("RegionId", ViewBag.Regions as SelectList, new { id = "region" })
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AreaId" class="control-label"></label>
+                <!--<input asp-for="RegionId" class="form-control" />-->
+                @Html.DropDownList("Areas", ViewBag.Areas as SelectList, new { id = "area" })
+                <span asp-validation-for="AreaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="LocIndex">Вернуться к списку</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#region').change();
+    });
+    $('#region').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetAreas","Addresses")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('area').innerHTML = data;
+                    $('#area').change();
+                }
+            });
+        });
+        $('#area').change(function()
+        {
+            // получаем выбранный id
+            var id = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetLocalities", "Addresses")/' + id,
+                success: function (data) {
+
+                    // заменяем содержимое присланным частичным представлением
+                    document.getElementById('locality').innerHTML = data;
+                }
+            });
+        });
+    </script>
+}

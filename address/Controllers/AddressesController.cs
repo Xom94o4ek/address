@@ -23,18 +23,33 @@ namespace address.Controllers
         public IActionResult Index()
         {
             //return View(await db.Houses.ToListAsync());
-            //int regionSelectedIndex = 1;
-            SelectList regions = new SelectList(db.Regions, "RegionId", "RegionName", 1);
+            int regionSelectedIndex = 1;
+            SelectList regions = new SelectList(db.Regions, "RegionId", "RegionName", regionSelectedIndex);
             ViewBag.Regions = regions;
-            SelectList areas = new SelectList(db.Areas.Where(c => c.RegionId == 1), "AreaId", "AreaName", 1);
+
+            IQueryable<Areas> FilterAreas = db.Areas.Where(c => c.RegionId == Convert.ToInt32(regions.SelectedValue));
+            int AreaNum = FilterAreas.Count() == 0 ? 0 : FilterAreas.First().AreaId;
+            SelectList areas = new SelectList(FilterAreas, "AreaId", "AreaName", AreaNum);
             ViewBag.Areas = areas;
-            SelectList localities = new SelectList(db.Localities.Where(c => c.AreaId == Convert.ToInt32(areas.SelectedValue)), "LocalityId", "LocalityName",1);
+
+            IQueryable<Localities> FilterLocalities = db.Localities.Where(c => c.AreaId == Convert.ToInt32(areas.SelectedValue));
+            int LocalitiesNum = FilterLocalities.Count() == 0 ? 0 : FilterLocalities.First().LocalityId;
+            SelectList localities = new SelectList(FilterLocalities, "LocalityId", "LocalityName", LocalitiesNum);
             ViewBag.Localities = localities;
-            SelectList districts = new SelectList(db.Districts.Where(c => c.LocalityId == Convert.ToInt32(localities.SelectedValue)), "DistrictId", "DistrictName",1);
+
+            IQueryable<Districts> FilterDistricts = db.Districts.Where(c => c.LocalityId == Convert.ToInt32(localities.SelectedValue));
+            int DistrictsNum = FilterDistricts.Count() == 0 ? 0 : FilterDistricts.First().DistrictId;
+            SelectList districts = new SelectList(FilterDistricts, "DistrictId", "DistrictName", DistrictsNum);
             ViewBag.Districts = districts;
-            SelectList streets = new SelectList(db.Streets.Where(c => c.DistrictId == Convert.ToInt32(districts.SelectedValue)), "StreetId", "StreetName",1);
+
+            IQueryable<Streets> FilterStreets = db.Streets.Where(c => c.DistrictId == Convert.ToInt32(districts.SelectedValue));
+            int StreetsNum = FilterStreets.Count() == 0 ? 0 : FilterStreets.First().StreetId;
+            SelectList streets = new SelectList(FilterStreets, "StreetId", "StreetName", StreetsNum);
             ViewBag.Streets = streets;
-            SelectList houses = new SelectList(db.Houses.Where(c => c.StreetId == Convert.ToInt32(streets.SelectedValue)), "HouseId", "HouseNum",1);
+
+            IQueryable<Houses> FilterHouses = db.Houses.Where(c => c.StreetId == Convert.ToInt32(streets.SelectedValue));
+            int HousesNum = FilterHouses.Count() == 0 ? 00 : FilterHouses.First().HouseId;
+            SelectList houses = new SelectList(FilterHouses, "HouseId", "HouseNum", HousesNum);
             ViewBag.Houses = houses;
             return View();
         }
