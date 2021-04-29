@@ -1,0 +1,63 @@
+﻿@model IEnumerable<address.ModelsData.DataHouses>
+    <thead>
+        <tr>
+            <th>
+                Регион
+            </th>
+            <th>
+                Район
+            </th>
+            <th>
+                Населенный пункт
+            </th>
+            <th>
+                ЭПС
+            </th>
+            <th>
+                Улица
+            </th>
+            <th>
+                Дом
+            </th>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <th>
+                    Информация о доме
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @item.RegionName
+            </td>
+            <td>
+                @item.AreaName
+            </td>
+            <td>
+                @item.LocalityName
+            </td>
+            <td>
+                @item.DistrictName
+            </td>
+            <td>
+                @item.StreetName
+            </td>
+            <td>
+                @item.HouseNum
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    <b>Индекс:</b> @item.Index<br>
+                    <b>Этажность:</b> @item.Floors<br>
+                    <b>Кол-во подъездов:</b> @item.Entrances<br>
+                    <b>Кол-во квартир:</b> @item.Flats<br>
+                </td>
+            }
+        </tr>
+        }
+    </tbody>

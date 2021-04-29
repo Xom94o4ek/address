@@ -1,4 +1,4 @@
-﻿@model IEnumerable<address.Models.Users>
+﻿@model IEnumerable<address.ModelsData.DataHouses>
 
 @{
     ViewData["Title"] = "Пользователи";
@@ -8,30 +8,68 @@
 
 <html>
 <head>
-    <title>Пользователи</title>
+    <title>Поиск по адресу</title>
 </head>
 <body>
-    <h3>Пользователи сервиса</h3>
-    <table align="center">
-        <tr align="center">
-            <td>ID</td>
-            <td>Имя пользователя</td>
-            <td>Группа пользователя</td>
-            <td>Дата регистрации</td>
-            <td>Почта</td>
-            <td></td>
-        </tr>
-        @foreach (var user in Model)
-        {
-    <tr align="center">
-        <td>@user.Id</td>
-        <td>@user.Name</td>
-        <td>@(user.Group == 0 ? "Пользователь" : user.Group == 1 ? "Администратор" : "Владелец")</td>
-        <td>@user.RegistrationDate.Date.ToString("dd.MM.yyyy")</td>
-        <td>@user.Email</td>
-        <td><a href="~/Home/Edit/@user.Id">Редактировать</a></td>
-    </tr>
-        }
+    <h3>Поиск</h3>
+    <form>
+        <div class="form-group" style="display: inline-block;max-width:200px;">
+            <label class="control-label">Регион(Республика):</label>
+            <input id="RegionName" class="form-control" />
+        </div>
+        <div class="form-group" style="display: inline-block;max-width:200px;">
+            <label class="control-label">Город:</label>
+            <input id="LocalityName" class="form-control" />
+        </div>
+        <div class="form-group" style="display: inline-block;max-width:200px;">
+            <label class="control-label">ЭПС:</label>
+            <input id="DistrictName" class="form-control" />
+        </div>
+        <div class="form-group" style="display: inline-block;max-width:200px;">
+            <label class="control-label">Улица:</label>
+            <input id="StreetName" class="form-control" />
+        </div>
+        <div class="form-group" style="display: inline-block;max-width:200px;">
+            <label class="control-label">№ Дома:</label>
+            <input id="HouseNum" class="form-control" />
+        </div>
+        <div class="form-group">
+            <div id="Search" type="submit" class="btn btn-primary">Поиск</div>
+        </div>
+    </form>
+    <table id="SearchResult" class="table">
+        <h3 style="text-align: center">Для поиска необязательно заполнять все поля</h3>
     </table>
 </body>
 </html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("body").keypress(function (e) {
+            if (e.which === 13) {
+                $('#Search').click();
+            }
+        });
+    });
+    $('#Search').click(function(){
+        document.getElementById('SearchResult').innerHTML = '<h3 style="text-align: center">Выполняется поиск...</h3>';
+        var RegionName = document.getElementById('RegionName').value;
+        var LocalityName = document.getElementById('LocalityName').value;
+        var DistrictName = document.getElementById('DistrictName').value;
+        var StreetName = document.getElementById('StreetName').value;
+        var HouseNum = document.getElementById('HouseNum').value;
+        $.ajax({
+                type: 'GET',
+                url: '@Url.Action("Search","Home")',
+                data: { RegionName: RegionName, LocalityName: LocalityName, DistrictName: DistrictName, StreetName: StreetName, HouseNum:HouseNum },
+                success: function (data) {
+                    document.getElementById('SearchResult').innerHTML = data;
+                }
+            });
+
+    });
+
+</script>
+}
