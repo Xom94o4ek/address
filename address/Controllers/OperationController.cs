@@ -83,6 +83,45 @@ namespace address.Controllers
 
             return View(await districts.ToListAsync());
         }
+
+        public async Task<IActionResult> StrIndex(string id)
+        {
+            var streets = from d in _context.Streets
+                            join p in _context.Districts on d.DistrictId equals p.DistrictId
+                            join a in _context.Localities on p.LocalityId equals a.LocalityId
+                            join b in _context.Areas on a.AreaId equals b.AreaId
+                            join c in _context.Regions on b.RegionId equals c.RegionId
+                            orderby d.StreetId
+                            select new DataStreets { StreetId = d.DistrictId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId };
+
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                streets = streets.Where(s => s.StreetName.Contains(id));
+            }
+
+            return View(await streets.ToListAsync());
+        }
+
+        public async Task<IActionResult> HouseIndex(string id)
+        {
+            var houses = from e in _context.Houses
+                          join d in _context.Streets on e.StreetId equals d.StreetId
+                          join p in _context.Districts on d.DistrictId equals p.DistrictId
+                          join a in _context.Localities on p.LocalityId equals a.LocalityId
+                          join b in _context.Areas on a.AreaId equals b.AreaId
+                          join c in _context.Regions on b.RegionId equals c.RegionId
+                          orderby e.HouseId
+                          select new DataHouses { HouseId = e.HouseId, HouseNum = e.HouseNum, Index = e.Index, Floors = e.Floors, Entrances = e.Entrances, Flats = e.Flats, StreetId = d.DistrictId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId };
+
+
+            if (!String.IsNullOrEmpty(id))
+            {
+                houses = houses.Where(s => s.StreetName.Contains(id));
+            }
+
+            return View(await houses.ToListAsync());
+        }
         // GET: Operation/Details/5
         /*public async Task<IActionResult> Details(int? id)
         {
@@ -174,6 +213,52 @@ namespace address.Controllers
             return View(districts);
         }
 
+        public async Task<IActionResult> StrDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var streets = await (from d in _context.Streets
+                                 join p in _context.Districts on d.DistrictId equals p.DistrictId
+                                 join a in _context.Localities on p.LocalityId equals a.LocalityId
+                                 join b in _context.Areas on a.AreaId equals b.AreaId
+                                 join c in _context.Regions on b.RegionId equals c.RegionId
+                                 orderby d.StreetId
+                                 select new DataStreets { StreetId = d.StreetId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.StreetId == id);
+
+            if (streets == null)
+            {
+                return NotFound();
+            }
+
+            return View(streets);
+        }
+
+        public async Task<IActionResult> HouseDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var houses = await (from e in _context.Houses
+                                join d in _context.Streets on e.StreetId equals d.StreetId
+                                join p in _context.Districts on d.DistrictId equals p.DistrictId
+                                join a in _context.Localities on p.LocalityId equals a.LocalityId
+                                join b in _context.Areas on a.AreaId equals b.AreaId
+                                join c in _context.Regions on b.RegionId equals c.RegionId
+                                orderby e.HouseId
+                                select new DataHouses { HouseId = e.HouseId, HouseNum = e.HouseNum, Index = e.Index, Floors = e.Floors, Entrances = e.Entrances, Flats = e.Flats, StreetId = d.DistrictId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.HouseId == id);
+
+            if (houses == null)
+            {
+                return NotFound();
+            }
+
+            return View(houses);
+        }
         // GET: Operation/Create
         /*public IActionResult Create()
         {
@@ -218,6 +303,56 @@ namespace address.Controllers
             int LocalitiesNum = FilterLocalities.Count() == 0 ? 0 : FilterLocalities.First().LocalityId;
             SelectList localities = new SelectList(FilterLocalities, "LocalityId", "LocalityName", LocalitiesNum);
             ViewBag.Localities = localities;
+            return View();
+        }
+        public IActionResult StrCreate()
+        {
+            int regionSelectedIndex = 1;
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", regionSelectedIndex);
+            ViewBag.Regions = regions;
+
+            IQueryable<Areas> FilterAreas = _context.Areas.Where(c => c.RegionId == Convert.ToInt32(regions.SelectedValue));
+            int AreaNum = FilterAreas.Count() == 0 ? 0 : FilterAreas.First().AreaId;
+            SelectList areas = new SelectList(FilterAreas, "AreaId", "AreaName", AreaNum);
+            ViewBag.Areas = areas;
+
+            IQueryable<Localities> FilterLocalities = _context.Localities.Where(c => c.AreaId == Convert.ToInt32(areas.SelectedValue));
+            int LocalitiesNum = FilterLocalities.Count() == 0 ? 0 : FilterLocalities.First().LocalityId;
+            SelectList localities = new SelectList(FilterLocalities, "LocalityId", "LocalityName", LocalitiesNum);
+            ViewBag.Localities = localities;
+
+            IQueryable<Districts> FilterDistricts = _context.Districts.Where(c => c.LocalityId == Convert.ToInt32(localities.SelectedValue));
+            int DistrictsNum = FilterDistricts.Count() == 0 ? 0 : FilterDistricts.First().DistrictId;
+            SelectList districts = new SelectList(FilterDistricts, "DistrictId", "DistrictName", DistrictsNum);
+            ViewBag.Districts = districts;
+            return View();
+        }
+
+        public IActionResult HouseCreate()
+        {
+            int regionSelectedIndex = 1;
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", regionSelectedIndex);
+            ViewBag.Regions = regions;
+
+            IQueryable<Areas> FilterAreas = _context.Areas.Where(c => c.RegionId == Convert.ToInt32(regions.SelectedValue));
+            int AreaNum = FilterAreas.Count() == 0 ? 0 : FilterAreas.First().AreaId;
+            SelectList areas = new SelectList(FilterAreas, "AreaId", "AreaName", AreaNum);
+            ViewBag.Areas = areas;
+
+            IQueryable<Localities> FilterLocalities = _context.Localities.Where(c => c.AreaId == Convert.ToInt32(areas.SelectedValue));
+            int LocalitiesNum = FilterLocalities.Count() == 0 ? 0 : FilterLocalities.First().LocalityId;
+            SelectList localities = new SelectList(FilterLocalities, "LocalityId", "LocalityName", LocalitiesNum);
+            ViewBag.Localities = localities;
+
+            IQueryable<Districts> FilterDistricts = _context.Districts.Where(c => c.LocalityId == Convert.ToInt32(localities.SelectedValue));
+            int DistrictsNum = FilterDistricts.Count() == 0 ? 0 : FilterDistricts.First().DistrictId;
+            SelectList districts = new SelectList(FilterDistricts, "DistrictId", "DistrictName", DistrictsNum);
+            ViewBag.Districts = districts;
+
+            IQueryable<Streets> FilterStreets = _context.Streets.Where(c => c.DistrictId == Convert.ToInt32(districts.SelectedValue));
+            int StreetsNum = FilterStreets.Count() == 0 ? 0 : FilterStreets.First().StreetId;
+            SelectList streets = new SelectList(FilterStreets, "StreetId", "StreetName", StreetsNum);
+            ViewBag.Streets = streets;
             return View();
         }
 
@@ -287,6 +422,31 @@ namespace address.Controllers
             return View(districts);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StrCreate([Bind("StreetName", "DistrictId")] Streets streets)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(streets);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(StrIndex));
+            }
+            return View(streets);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HouseCreate([Bind("HouseNum", "Index", "Floors", "Entrances", "Flats", "StreetId")] Houses houses)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(houses);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(HouseIndex));
+            }
+            return View(houses);
+        }
         // GET: Operation/Edit/5
         /*public async Task<IActionResult> Edit(int? id)
         {
@@ -346,7 +506,7 @@ namespace address.Controllers
             ViewBag.Areas = areas;
             SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", OurRegId);
             ViewBag.Regions = regions;
-            if (areas == null)
+            if (localities == null)
             {
                 return NotFound();
             }
@@ -368,11 +528,66 @@ namespace address.Controllers
             ViewBag.Areas = areas;
             SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", OurRegId);
             ViewBag.Regions = regions;
-            if (areas == null)
+            if (districts == null)
             {
                 return NotFound();
             }
             return View(districts);
+        }
+
+        public async Task<IActionResult> StrEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var streets = await _context.Streets.FindAsync(id);
+            int OuDistrictId = streets.DistrictId;
+            int OurLocalityId = (await _context.Districts.FindAsync(OuDistrictId)).LocalityId;
+            int OurAreaId = (await _context.Localities.FindAsync(OurLocalityId)).AreaId;
+            int OurRegId = (await _context.Areas.FindAsync(OurAreaId)).RegionId;
+            SelectList districts = new SelectList(_context.Districts.Where(c => c.LocalityId == OurLocalityId), "DistrictId", "DistrictName", OuDistrictId);
+            ViewBag.Districts = districts;
+            SelectList localities = new SelectList(_context.Localities.Where(c => c.AreaId == OurAreaId), "LocalityId", "LocalityName", OurLocalityId);
+            ViewBag.Localities = localities;
+            SelectList areas = new SelectList(_context.Areas.Where(c => c.RegionId == OurRegId), "AreaId", "AreaName", OurAreaId);
+            ViewBag.Areas = areas;
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", OurRegId);
+            ViewBag.Regions = regions;
+            if (streets == null)
+            {
+                return NotFound();
+            }
+            return View(streets);
+        }
+
+        public async Task<IActionResult> HouseEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var houses = await _context.Houses.FindAsync(id);
+            int OuStreetId = houses.StreetId;
+            int OuDistrictId = (await _context.Streets.FindAsync(OuStreetId)).DistrictId; ;
+            int OurLocalityId = (await _context.Districts.FindAsync(OuDistrictId)).LocalityId;
+            int OurAreaId = (await _context.Localities.FindAsync(OurLocalityId)).AreaId;
+            int OurRegId = (await _context.Areas.FindAsync(OurAreaId)).RegionId;
+            SelectList streets = new SelectList(_context.Streets.Where(c => c.DistrictId == OuDistrictId), "StreetId", "StreetName", OuStreetId);
+            ViewBag.Streets = streets;
+            SelectList districts = new SelectList(_context.Districts.Where(c => c.LocalityId == OurLocalityId), "DistrictId", "DistrictName", OuDistrictId);
+            ViewBag.Districts = districts;
+            SelectList localities = new SelectList(_context.Localities.Where(c => c.AreaId == OurAreaId), "LocalityId", "LocalityName", OurLocalityId);
+            ViewBag.Localities = localities;
+            SelectList areas = new SelectList(_context.Areas.Where(c => c.RegionId == OurRegId), "AreaId", "AreaName", OurAreaId);
+            ViewBag.Areas = areas;
+            SelectList regions = new SelectList(_context.Regions, "RegionId", "RegionName", OurRegId);
+            ViewBag.Regions = regions;
+            if (houses == null)
+            {
+                return NotFound();
+            }
+            return View(houses);
         }
         // POST: Operation/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -533,6 +748,70 @@ namespace address.Controllers
             }
             return View(districts);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StrEdit(int id, [Bind("StreetId, StreetName", "DistrictId")] Streets streets)
+        {
+            if (id != streets.StreetId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(streets);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StreetsExists(streets.StreetId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(StrIndex));
+            }
+            return View(streets);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HouseEdit(int id, [Bind("HouseId", "HouseNum", "Index", "Floors", "Entrances", "Flats", "StreetId")] Houses houses)
+        {
+            if (id != houses.HouseId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(houses);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!HousesExists(houses.HouseId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(HouseIndex));
+            }
+            return View(houses);
+        }
         // GET: Operation/Delete/5
         /*public async Task<IActionResult> Delete(int? id)
         {
@@ -663,6 +942,73 @@ namespace address.Controllers
             return RedirectToAction(nameof(DisIndex));
         }
 
+        public async Task<IActionResult> StrDelete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var streets = await (from d in _context.Streets
+                                 join p in _context.Districts on d.DistrictId equals p.DistrictId
+                                 join a in _context.Localities on p.LocalityId equals a.LocalityId
+                                 join b in _context.Areas on a.AreaId equals b.AreaId
+                                 join c in _context.Regions on b.RegionId equals c.RegionId
+                                 orderby d.StreetId
+                                 select new DataStreets { StreetId = d.StreetId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.StreetId == id);
+
+            if (streets == null)
+            {
+                return NotFound();
+            }
+
+            return View(streets);
+        }
+        // POST: Operation/Delete/5
+        [HttpPost, ActionName("StrDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> StrDeleteConfirmed(int id)
+        {
+            var streets = await _context.Streets.FindAsync(id);
+            _context.Streets.Remove(streets);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(StrIndex));
+        }
+
+        public async Task<IActionResult> HouseDelete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var houses = await (from e in _context.Houses
+                                join d in _context.Streets on e.StreetId equals d.StreetId
+                                join p in _context.Districts on d.DistrictId equals p.DistrictId
+                                join a in _context.Localities on p.LocalityId equals a.LocalityId
+                                join b in _context.Areas on a.AreaId equals b.AreaId
+                                join c in _context.Regions on b.RegionId equals c.RegionId
+                                orderby e.HouseId
+                                select new DataHouses { HouseId = e.HouseId, HouseNum = e.HouseNum, Index = e.Index, Floors = e.Floors, Entrances = e.Entrances, Flats = e.Flats, StreetId = d.DistrictId, StreetName = d.StreetName, DistrictId = p.DistrictId, DistrictName = p.DistrictName, LocalityId = a.LocalityId, LocalityName = a.LocalityName, AreaId = b.AreaId, AreaName = b.AreaName, RegionName = c.RegionName, RegionId = c.RegionId }).FirstOrDefaultAsync(m => m.HouseId == id);
+
+            if (houses == null)
+            {
+                return NotFound();
+            }
+
+            return View(houses);
+        }
+        // POST: Operation/Delete/5
+        [HttpPost, ActionName("HouseDelete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HouseDeleteConfirmed(int id)
+        {
+            var houses = await _context.Houses.FindAsync(id);
+            _context.Houses.Remove(houses);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(HouseIndex));
+        }
+
         private bool RegionsExists(int id)
         {
             return _context.Regions.Any(e => e.RegionId == id);
@@ -678,6 +1024,14 @@ namespace address.Controllers
         private bool DistrictsExists(int id)
         {
             return _context.Districts.Any(e => e.DistrictId == id);
+        }
+        private bool StreetsExists(int id)
+        {
+            return _context.Streets.Any(e => e.StreetId == id);
+        }
+        private bool HousesExists(int id)
+        {
+            return _context.Houses.Any(e => e.HouseId == id);
         }
     }
 }

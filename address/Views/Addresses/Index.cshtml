@@ -3,27 +3,27 @@
 }
 
 <h5>
-    Выберите регион <div id="RegAdd" style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="RegCreate">[Добавить регион]</a></h6></div>
+    Выберите регион <div id="RegAdd" style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="RegCreate">[Добавить регион]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="RegIndex">[Посмотреть все регионы]</a></h6></div>
 </h5>
     @Html.DropDownList("RegionsId", ViewBag.Regions as SelectList, new { id = "region" })<div id="RegActions" style="display:none;margin-left: 20px;"><h6><a id="RegEdit" asp-controller="Operation" asp-action="RegEdit"><font color="orange">Редактировать</font></a> | <a id="RegDetails" asp-controller="Operation" asp-action="RegDetails"><font color="blue">Детали</font></a> | <a id="RegDelete" asp-controller="Operation" asp-action="RegDelete"><font color="red">Удалить</font></a></h6></div>
 <h5>
-    Выберите район <div id="AreaAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="AreaCreate">[Добавить район]</a></h6></div>
+    Выберите район <div id="AreaAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="AreaCreate">[Добавить район]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="AreaIndex">[Посмотреть все районы]</a></h6></div>
 </h5>
     @Html.DropDownList("AreasId", ViewBag.Areas as SelectList, new { id = "area" })<div id="AreaActions" style="display:none;margin-left: 20px;"><h6><a id="AreaEdit" asp-controller="Operation" asp-action="AreaEdit"><font color="orange">Редактировать</font></a> | <a id="AreaDetails" asp-controller="Operation" asp-action="AreaDetails"><font color="blue">Детали</font></a> | <a id="AreaDelete" asp-controller="Operation" asp-action="AreaDelete"><font color="red">Удалить</font></a></h6></div>
 <h5>
-    Выберите населенный пункт <div id="LocAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="LocCreate">[Добавить населенный пункт]</a></h6></div>
+    Выберите населенный пункт <div id="LocAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="LocCreate">[Добавить населенный пункт]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="LocIndex">[Посмотреть все населенные пункты]</a></h6></div>
 </h5>
     @Html.DropDownList("LocalitiesId", ViewBag.Localities as SelectList, new { id = "locality" })<div id="LocActions" style="display:none;margin-left: 20px;"><h6><a id="LocEdit" asp-controller="Operation" asp-action="LocEdit"><font color="orange">Редактировать</font></a> | <a id="LocDetails" asp-controller="Operation" asp-action="LocDetails"><font color="blue">Детали</font></a> | <a id="LocDelete" asp-controller="Operation" asp-action="LocDelete"><font color="red">Удалить</font></a></h6></div>
 <h5>
-    Выберите ЭПС <div id="DistAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="DisCreate">[Добавить ЭПС]</a></h6></div>
+    Выберите ЭПС <div id="DistAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="DisCreate">[Добавить ЭПС]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="DisIndex">[Посмотреть все ЭПС]</a></h6></div>
 </h5>
     @Html.DropDownList("DistrictsId", ViewBag.Districts as SelectList, new { id = "district" })<div id="DistActions" style="display:none;margin-left: 20px;"><h6><a id="DisEdit" asp-controller="Operation" asp-action="DisEdit"><font color="orange">Редактировать</font></a> | <a id="DisDetails" asp-controller="Operation" asp-action="DisDetails"><font color="blue">Детали</font></a> | <a id="DisDelete" asp-controller="Operation" asp-action="DisDelete"><font color="red">Удалить</font></a></h6></div>
 <h5>
-    Выберите улицу <div id="StreetAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="StrCreate">[Добавить улицу]</a></h6></div>
+    Выберите улицу <div id="StreetAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="StrCreate">[Добавить улицу]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="StrIndex">[Посмотреть все улицы]</a></h6></div>
 </h5>
     @Html.DropDownList("StreetsId", ViewBag.Streets as SelectList, new { id = "street" })<div id="StreetActions" style="display:none;margin-left: 20px;"><h6><a id="StrEdit" asp-controller="Operation" asp-action="StrEdit"><font color="orange">Редактировать</font></a> | <a id="StrDetails" asp-controller="Operation" asp-action="StrDetails"><font color="blue">Детали</font></a> | <a id="StrDelete" asp-controller="Operation" asp-action="StrDelete"><font color="red">Удалить</font></a></h6></div>
 <h5>
-    Выберите дом <div id="HouseAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="HouseCreate">[Добавить дом]</a></h6></div>
+    Выберите дом <div id="HouseAdd" style="display:none;color:green;"><h6><a asp-controller="Operation" asp-action="HouseCreate">[Добавить дом]</a></h6></div><div style="display:inline-block;color:green;"><h6><a asp-controller="Operation" asp-action="HouseIndex">[Посмотреть все дома]</a></h6></div>
 </h5>
     @Html.DropDownList("HousesId", ViewBag.Houses as SelectList, new { id = "house" })<div id="HouseActions" style="display:none;margin-left: 20px;"><h6><a id="HouseEdit" asp-controller="Operation" asp-action="HouseEdit"><font color="orange">Редактировать</font></a> | <a id="HouseDetails" asp-controller="Operation" asp-action="HouseDetails"><font color="blue">Детали</font></a> | <a id="HouseDelete" asp-controller="Operation" asp-action="HouseDelete"><font color="red">Удалить</font></a></h6></div>
 
@@ -146,12 +146,11 @@
 
                     // заменяем содержимое присланным частичным представлением
                     document.getElementById('house').innerHTML = data;
-                    if ($('house').val() != null) {
-                        document.getElementById('HouseEdit').style.display = document.getElementById('house').innerText != '' ? 'inline-block' : 'none';
+                    document.getElementById('HouseActions').style.display = $('#house').val() != null ? 'inline-block' : 'none';
+                    document.getElementById('HouseAdd').style.display = $('#house').val() != null ? 'inline-block' : 'none';
                         document.getElementById('HouseEdit').setAttribute('href', 'Operation/HouseEdit/' + id);
                         document.getElementById('HouseDetails').setAttribute('href', 'Operation/HouseDetails/' + id);
                         document.getElementById('HouseDelete').setAttribute('href', 'Operation/HouseDelete/' + id);
-                    }
                 }
             });
         });
