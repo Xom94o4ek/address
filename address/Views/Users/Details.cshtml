@@ -1,41 +1,35 @@
 ﻿@model address.Models.Users
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Детали";
 }
 
-<h1>Details</h1>
+<h1>Детали</h1>
 
 <div>
-    <h4>Users</h4>
+    <h4>Пользователь</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-2">
+            Имя пользователя
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
+        <dt class="col-sm-2">
+            Группа пользователя
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+        <dd class="col-sm-10">
+            @(Model.Group == 0 ? "Пользователь" : Model.Group == 1 ? "Администратор" : "Владелец")
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Group)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Group)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationDate)
+        <dt class="col-sm-2">
+            Дата регистрации
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.RegistrationDate)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
+        <dt class="col-sm-2">
+            Почтовый адрес
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Email)
@@ -43,6 +37,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Редактирование</a> |
+    <a asp-action="Index">Вернуться к списку</a>
 </div>

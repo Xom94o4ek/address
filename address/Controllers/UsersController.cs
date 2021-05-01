@@ -48,6 +48,13 @@ namespace address.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
+            List<SelectListItem> UGroupsItems = new List<SelectListItem>();
+            UGroupsItems.AddRange(new[]{
+                            new SelectListItem() { Text = "Пользователь", Value = "0" },
+                            new SelectListItem() { Text = "Администратор", Value = "1" },
+                            new SelectListItem() { Text = "Владелец", Value = "2" }});
+            SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", 0);
+            ViewBag.UGroups = UGroups;
             return View();
         }
 
@@ -76,6 +83,13 @@ namespace address.Controllers
             }
 
             var users = await db.Users.FindAsync(id);
+            List<SelectListItem> UGroupsItems = new List<SelectListItem>();
+            UGroupsItems.AddRange(new[]{
+                            new SelectListItem() { Text = "Пользователь", Value = "0" },
+                            new SelectListItem() { Text = "Администратор", Value = "1" },
+                            new SelectListItem() { Text = "Владелец", Value = "2" }});
+            SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", users.Group);
+            ViewBag.UGroups = UGroups;
             if (users == null)
             {
                 return NotFound();

@@ -1,39 +1,39 @@
 ﻿@model address.Models.Users
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Добавление нового пользователя";
 }
 
-<h1>Create</h1>
+<h1>Добавление нового пользователя</h1>
 
-<h4>Users</h4>
+<h4>Пользователь</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label class="control-label">Имя пользователя</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
+                <label class="control-label">Пароль</label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Group" class="control-label"></label>
-                <input asp-for="Group" class="form-control" />
+                <label class="control-label">Группа пользователя</label>
+                @Html.DropDownList("Group", ViewBag.UGroups as SelectList, new { id = "group" })
                 <span asp-validation-for="Group" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RegistrationDate" class="control-label"></label>
+                <label class="control-label">Дата регистрации</label>
                 <input asp-for="RegistrationDate" class="form-control" />
                 <span asp-validation-for="RegistrationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+                <label class="control-label">Почтовый адрес</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
@@ -45,7 +45,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Вернуться к списку</a>
 </div>
 
 @section Scripts {

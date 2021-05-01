@@ -14,6 +14,7 @@
             <label asp-for="Email">Введите Email</label><br />
             <input type="text" asp-for="Email" />
             <span asp-validation-for="Email" />
+            <font color="red">@Html.ValidationMessageFor(model => model.Email)</font>
         </div>
         <div>
             <label asp-for="Password">Введите пароль</label><br />

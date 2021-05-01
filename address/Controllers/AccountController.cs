@@ -53,7 +53,7 @@ namespace address.Controllers
         {
             if (ModelState.IsValid)
             {
-                Users user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Name == model.Name);
+                Users user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
@@ -65,7 +65,7 @@ namespace address.Controllers
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("Email", "Данный Email уже используется");
             }
             return View(model);
         }
