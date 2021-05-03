@@ -11,14 +11,34 @@
     <title>Личный кабинет</title>
 </head>
 <body>
-    <h3>@User.Identity.Name @Model.Email</h3>
-    <ul>
-        <li>
-            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Просмотр/редактирование пользователей [общее кол-во @ViewData["UsersCount"]]</a>
-        </li>
-        <li>
-            <a class="nav-link text-dark" asp-area="" asp-controller="Addresses" asp-action="Index">Просмотр/редактирование адресов</a>
-        </li>
-    </ul>
+    <div class="container" style="text-align: center;color:#808080">
+        <h4>
+            <div align="left" style="min-width:30%;display:inline-block">
+                Имя: @User.Identity.Name
+            </div>
+            <div align="left" style="min-width:30%;display:inline-block">
+                Статус: @(Model.Group == 0 ? "Пользователь" : Model.Group == 1 ? "Администратор" : "Владелец")
+            </div>
+            <div align="right" style="min-width:30%;display:inline-block">
+                Почта: @Model.Email
+            </div>
+        </h4>
+    </div>
+    <h5>
+        <ul>
+            @if (Convert.ToInt32(ViewData["UGroup"]) >= 2)
+            {
+                <li>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Просмотр/редактирование пользователей [общее кол-во @ViewData["UsersCount"]]</a>
+                </li>
+            }
+            @if (Convert.ToInt32(ViewData["UGroup"]) >= 1)
+            {
+                <li>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Addresses" asp-action="Index">Просмотр/редактирование адресов</a>
+                </li>
+            }
+        </ul>
+    </h5>
 </body>
 </html>

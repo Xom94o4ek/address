@@ -24,38 +24,62 @@ namespace address.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await db.Users.ToListAsync());
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                return View(await db.Users.ToListAsync());
+            }
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
-
-            var users = await db.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(users);
+                var users = await db.Users
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return View(users);
+            }
         }
 
         // GET: Users/Create
         public IActionResult Create()
         {
-            List<SelectListItem> UGroupsItems = new List<SelectListItem>();
-            UGroupsItems.AddRange(new[]{
-                            new SelectListItem() { Text = "Пользователь", Value = "0" },
-                            new SelectListItem() { Text = "Администратор", Value = "1" },
-                            new SelectListItem() { Text = "Владелец", Value = "2" }});
-            SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", 0);
-            ViewBag.UGroups = UGroups;
-            return View();
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                List<SelectListItem> UGroupsItems = new List<SelectListItem>();
+                UGroupsItems.AddRange(new[]{
+                                new SelectListItem() { Text = "Пользователь", Value = "0" },
+                                new SelectListItem() { Text = "Администратор", Value = "1" },
+                                new SelectListItem() { Text = "Владелец", Value = "2" }});
+                SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", 0);
+                ViewBag.UGroups = UGroups;
+                return View();
+            }
         }
 
         // POST: Users/Create
@@ -65,36 +89,52 @@ namespace address.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Password,Group,RegistrationDate,Email")] Users users)
         {
-            if (ModelState.IsValid)
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
             {
-                db.Add(users);
-                await db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login", "Account");
             }
-            return View(users);
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Add(users);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(users);
+            }
         }
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var users = await db.Users.FindAsync(id);
-            List<SelectListItem> UGroupsItems = new List<SelectListItem>();
-            UGroupsItems.AddRange(new[]{
-                            new SelectListItem() { Text = "Пользователь", Value = "0" },
-                            new SelectListItem() { Text = "Администратор", Value = "1" },
-                            new SelectListItem() { Text = "Владелец", Value = "2" }});
-            SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", users.Group);
-            ViewBag.UGroups = UGroups;
-            if (users == null)
-            {
-                return NotFound();
+                var users = await db.Users.FindAsync(id);
+                List<SelectListItem> UGroupsItems = new List<SelectListItem>();
+                UGroupsItems.AddRange(new[]{
+                                new SelectListItem() { Text = "Пользователь", Value = "0" },
+                                new SelectListItem() { Text = "Администратор", Value = "1" },
+                                new SelectListItem() { Text = "Владелец", Value = "2" }});
+                SelectList UGroups = new SelectList(UGroupsItems, "Value", "Text", users.Group);
+                ViewBag.UGroups = UGroups;
+                if (users == null)
+                {
+                    return NotFound();
+                }
+                return View(users);
             }
-            return View(users);
         }
 
         // POST: Users/Edit/5
@@ -104,50 +144,66 @@ namespace address.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Password,Group,RegistrationDate,Email")] Users users)
         {
-            if (id != users.Id)
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
+            else
+            {
+                if (id != users.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    db.Update(users);
-                    await db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsersExists(users.Id))
+                    try
                     {
-                        return NotFound();
+                        db.Update(users);
+                        await db.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!UsersExists(users.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return View(users);
             }
-            return View(users);
         }
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
-
-            var users = await db.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (users == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(users);
+                var users = await db.Users
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (users == null)
+                {
+                    return NotFound();
+                }
+
+                return View(users);
+            }
         }
 
         // POST: Users/Delete/5
@@ -155,10 +211,18 @@ namespace address.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var users = await db.Users.FindAsync(id);
-            db.Users.Remove(users);
-            await db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
+            if (Iuser == null || Iuser.Group < 2)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                var users = await db.Users.FindAsync(id);
+                db.Users.Remove(users);
+                await db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool UsersExists(int id)

@@ -53,7 +53,7 @@ namespace address.Controllers
         {
             if (ModelState.IsValid)
             {
-                Users user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                Users user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email || u.Name == model.Name);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
@@ -61,11 +61,11 @@ namespace address.Controllers
                     await db.SaveChangesAsync();
 
                     await Authenticate(model.Email); // аутентификация
-
+                    
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                    ModelState.AddModelError("Email", "Данный Email уже используется");
+                    ModelState.AddModelError("", "Данный Email/Пользователь уже используется");
             }
             return View(model);
         }
@@ -82,6 +82,7 @@ namespace address.Controllers
                 }
                 else
                 {
+                    ViewData["UGroup"] = user.Group;
                     ViewData["UsersCount"] = db.Users.Count();
                     return View(user);
                 }
