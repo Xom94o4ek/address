@@ -42,7 +42,7 @@ namespace address.Models
             }
             if (!context.Regions.Any())
             {
-                context.Regions.AddRange(
+                /*context.Regions.AddRange(
                     new Regions
                     {
                         RegionName = "Республика Татарстан"
@@ -52,11 +52,25 @@ namespace address.Models
                         RegionName = "Волгоградская область"
                     }
                 );
+                context.SaveChanges();*/
+                context.Regions.Add(
+                    new Regions
+                    {
+                        RegionName = "Республика Татарстан"
+                    }
+                );
+                context.SaveChanges();
+                context.Regions.Add(
+                    new Regions
+                    {
+                        RegionName = "Волгоградская область"
+                    }
+                );
                 context.SaveChanges();
             }
             if (!context.Areas.Any())
             {
-                context.Areas.AddRange(
+                /*context.Areas.AddRange(
                     new Areas
                     {
                         AreaName = "Казанский городской округ",
@@ -70,19 +84,47 @@ namespace address.Models
                     new Areas
                     {
                         AreaName = "Волгоградский городской округ",
-                        RegionId = 1
+                        RegionId = 2
                     },
                     new Areas
                     {
                         AreaName = "Алексеевский район",
-                        RegionId = 1
+                        RegionId = 2
                     }
                 );
+                context.SaveChanges();*/
+                context.Areas.Add(
+                    new Areas
+                    {
+                        AreaName = "Казанский городской округ",
+                        RegionId = 1
+                    });
+                context.SaveChanges();
+                context.Areas.Add(
+                    new Areas
+                    {
+                        AreaName = "Балтасинский район",
+                        RegionId = 1
+                    });
+                context.SaveChanges();
+                context.Areas.Add(
+                    new Areas
+                    {
+                        AreaName = "Волгоградский городской округ",
+                        RegionId = 2
+                    });
+                context.SaveChanges();
+                context.Areas.Add(
+                    new Areas
+                    {
+                        AreaName = "Алексеевский район",
+                        RegionId = 2
+                    });
                 context.SaveChanges();
             }
             if (!context.Localities.Any())
             {
-                context.Localities.AddRange(
+                /*context.Localities.AddRange(
                     new Localities
                     {
                         LocalityName = "Казань",
@@ -104,11 +146,39 @@ namespace address.Models
                         AreaId = 3
                     }
                 );
+                context.SaveChanges();*/
+                context.Localities.AddRange(
+                    new Localities
+                    {
+                        LocalityName = "Казань",
+                        AreaId = 1
+                    });
+                context.SaveChanges();
+                context.Localities.AddRange(
+                    new Localities
+                    {
+                        LocalityName = "Карадуванское поселение",
+                        AreaId = 2
+                    });
+                context.SaveChanges();
+                context.Localities.AddRange(
+                    new Localities
+                    {
+                        LocalityName = "пгт Балтаси",
+                        AreaId = 2
+                    });
+                context.SaveChanges();
+                context.Localities.AddRange(
+                    new Localities
+                    {
+                        LocalityName = "Волгоград",
+                        AreaId = 3
+                    });
                 context.SaveChanges();
             }
             if (!context.Districts.Any())
             {
-                context.Districts.AddRange(
+                /*context.Districts.AddRange(
                     new Districts
                     {
                         DistrictName = "Ново-Савиновский район",
@@ -125,11 +195,32 @@ namespace address.Models
                         LocalityId = 1
                     }
                 );
+                context.SaveChanges();*/
+                context.Districts.AddRange(
+                    new Districts
+                    {
+                        DistrictName = "Ново-Савиновский район",
+                        LocalityId = 1
+                    });
+                context.SaveChanges();
+                context.Districts.AddRange(
+                    new Districts
+                    {
+                        DistrictName = "деревня Карадуван",
+                        LocalityId = 2
+                    });
+                context.SaveChanges();
+                context.Districts.AddRange(
+                    new Districts
+                    {
+                        DistrictName = "Советский район",
+                        LocalityId = 1
+                    });
                 context.SaveChanges();
             }
             if (!context.Streets.Any())
             {
-                context.Streets.AddRange(
+                /*context.Streets.AddRange(
                     new Streets
                     {
                         StreetName = "ул. Чистопольская",
@@ -146,11 +237,33 @@ namespace address.Models
                         DistrictId = 1
                     }
                 );
+                context.SaveChanges();*/
+                context.Streets.AddRange(
+                    new Streets
+                    {
+                        StreetName = "ул. Чистопольская",
+                        DistrictId = 1
+                    });
+                context.SaveChanges();
+                context.Streets.AddRange(
+                    new Streets
+                    {
+                        StreetName = "ул. Родник",
+                        DistrictId = 2
+                    });
+                context.SaveChanges();
+                context.Streets.AddRange(
+                    new Streets
+                    {
+                        StreetName = "ул. Чуйкова",
+                        DistrictId = 1
+                    }
+                );
                 context.SaveChanges();
             }
             if (!context.Houses.Any())
             {
-                context.Houses.AddRange(
+                /*context.Houses.AddRange(
                     new Houses
                     {
                         HouseNum = "11",
@@ -179,6 +292,39 @@ namespace address.Models
                         StreetId = 3
                     }
                 );
+                context.SaveChanges();*/
+                context.Houses.AddRange(
+                    new Houses
+                    {
+                        HouseNum = "11",
+                        Index = 420066,
+                        Floors = 9,
+                        Entrances = 2,
+                        Flats = 0,
+                        StreetId = 1
+                    });
+                context.SaveChanges();
+                context.Houses.AddRange(
+                    new Houses
+                    {
+                        HouseNum = "1",
+                        Index = 422261,
+                        Floors = 1,
+                        Entrances = 1,
+                        Flats = 1,
+                        StreetId = 2
+                    });
+                context.SaveChanges();
+                context.Houses.AddRange(
+                    new Houses
+                    {
+                        HouseNum = "9",
+                        Index = 420066,
+                        Floors = 9,
+                        Entrances = 6,
+                        Flats = 216,
+                        StreetId = 3
+                    });
                 context.SaveChanges();
             }
         }
