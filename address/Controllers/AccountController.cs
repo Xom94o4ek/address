@@ -25,6 +25,10 @@ namespace address.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// Вход пользователя
+        /// </summary>
+        /// <param name="model">Модель с данными пользователя</param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
@@ -47,6 +51,10 @@ namespace address.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// Регистрация нового пользователя
+        /// </summary>
+        /// <param name="model">Модель с данными нового пользователя</param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -60,7 +68,7 @@ namespace address.Controllers
                     db.Users.Add(new Users { Name = model.Name, Email = model.Email, Password = model.Password, RegistrationDate = DateTime.Now.Date });
                     await db.SaveChangesAsync();
 
-                    await Authenticate(model.Email); // аутентификация
+                    await Authenticate(model.Name); // аутентификация
                     
                     return RedirectToAction("Index", "Home");
                 }
@@ -69,7 +77,9 @@ namespace address.Controllers
             }
             return View(model);
         }
-
+        /// <summary>
+        /// Личный кабинет GET: /Account/Cabinet
+        /// </summary>
         [HttpGet]
         public IActionResult Cabinet()
         {
@@ -89,7 +99,10 @@ namespace address.Controllers
             }
             return RedirectToAction("Login", "Account");
         }
-
+        /// <summary>
+        /// Аутентификация пользователя при входе/регистрации
+        /// </summary>
+        /// <param name="userName">Имя пользователя</param>
         private async Task Authenticate(string userName)
         {
             // создаем один claim

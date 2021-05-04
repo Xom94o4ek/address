@@ -1,21 +1,17 @@
 ﻿using address.Models;
 using address.ModelsData;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using address.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace address.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //private readonly ILogger<HomeController> _logger;
 
         AddressSystemContext db;
         public HomeController(AddressSystemContext context)
@@ -23,19 +19,21 @@ namespace address.Controllers
             db = context;
         }
 
-        //[Authorize] //
+        /// <summary>
+        /// Инициализация стартовой страницы (страница поиска)
+        /// </summary>
         public IActionResult Index()
         {
-            //return View(db.Users.ToList());
-            //return Content(User.Identity.Name);
             return View();
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Поиск по введенному адресу
+        /// </summary>
+        /// <param name="RegionName">Введенный регион</param>
+        /// <param name="LocalityName">Введенный населенный пункт</param>
+        /// <param name="DistrictName">Введенный ЭПС</param>
+        /// <param name="StreetName">Введенная улица</param>
+        /// <param name="HouseNum">Введенный номер дома</param>
         public ActionResult Search(string RegionName, string LocalityName, string DistrictName, string StreetName, string HouseNum)
         {
 

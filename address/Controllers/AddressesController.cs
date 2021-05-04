@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using address.Data;
 using address.Models;
 
@@ -21,9 +16,11 @@ namespace address.Controllers
         }
 
         // GET: Addresses
+        /// <summary>
+        /// Инициализация страницы управления адресами для администратора
+        /// </summary>
         public IActionResult Index()
         {
-            //return View(await db.Houses.ToListAsync());
             Users Iuser = db.Users.FirstOrDefault(u => u.Name == User.Identity.Name);
             if (Iuser == null || Iuser.Group < 1)
             {
@@ -40,22 +37,42 @@ namespace address.Controllers
                 return View();
             }
         }
+        /// <summary>
+        /// Получение районов
+        /// </summary>
+        /// <param name="id">id региона</param>
         public ActionResult GetAreas(int id)
         {
             return PartialView(db.Areas.Where(c => c.RegionId == id).ToList());
         }
+        /// <summary>
+        /// Получение населенных пунктов
+        /// </summary>
+        /// <param name="id">id района</param>
         public ActionResult GetLocalities(int id)
         {
             return PartialView(db.Localities.Where(c => c.AreaId == id).ToList());
         }
+        /// <summary>
+        /// Получение ЭПС
+        /// </summary>
+        /// <param name="id">id населенного пункта</param>
         public ActionResult GetDistricts(int id)
         {
             return PartialView(db.Districts.Where(c => c.LocalityId == id).ToList());
         }
+        /// <summary>
+        /// Получение улиц
+        /// </summary>
+        /// <param name="id">id ЭПС</param>
         public ActionResult GetStreets(int id)
         {
             return PartialView(db.Streets.Where(c => c.DistrictId == id).ToList());
         }
+        /// <summary>
+        /// Получение домов
+        /// </summary>
+        /// <param name="id">id улицы</param>
         public ActionResult GetHouses(int id)
         {
             return PartialView(db.Houses.Where(c => c.StreetId == id).ToList());
