@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using address.Data;
 using address.Models;
 using Microsoft.AspNetCore.Authorization;
+using address.Log;
 
 namespace address.Controllers
 {
@@ -14,7 +15,7 @@ namespace address.Controllers
     public class UsersController : Controller
     {
         private readonly AddressSystemContext db;
-
+        Logger Log = new Logger();
         public UsersController(AddressSystemContext context)
         {
             db = context;
@@ -55,7 +56,7 @@ namespace address.Controllers
                 {
                     return NotFound();
                 }
-
+                Log.Info($"[User:Detail][User:{User.Identity.Name}]", users.Email, users.Name);
                 return View(users);
             }
         }
@@ -99,6 +100,7 @@ namespace address.Controllers
                 {
                     db.Add(users);
                     await db.SaveChangesAsync();
+                    Log.Info($"[User:Create][User:{User.Identity.Name}]", users.Id, users.Email, users.Name,users.Group, users.RegistrationDate);
                     return RedirectToAction(nameof(Index));
                 }
                 return View(users);
@@ -161,6 +163,7 @@ namespace address.Controllers
                     {
                         db.Update(users);
                         await db.SaveChangesAsync();
+                        Log.Info($"[User:Edit][User:{User.Identity.Name}]", users.Id, users.Email, users.Name, users.Group, users.RegistrationDate);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -220,6 +223,7 @@ namespace address.Controllers
                 var users = await db.Users.FindAsync(id);
                 db.Users.Remove(users);
                 await db.SaveChangesAsync();
+                Log.Info($"[User:Delete][User:{User.Identity.Name}]", users.Id, users.Email, users.Name, users.Group, users.RegistrationDate);
                 return RedirectToAction(nameof(Index));
             }
         }

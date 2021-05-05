@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using address.Data;
+using address.Log;
 
 namespace address.Controllers
 {
@@ -14,6 +15,7 @@ namespace address.Controllers
         //private readonly ILogger<HomeController> _logger;
 
         AddressSystemContext db;
+        Logger Log = new Logger();
         public HomeController(AddressSystemContext context)
         {
             db = context;
@@ -70,7 +72,7 @@ namespace address.Controllers
             {
                 result = result.Where(s => s.HouseNum.Contains(HouseNum));
             }
-
+            Log.DebugFormat("[Поиск адреса]", RegionName, LocalityName, DistrictName, StreetName, HouseNum);
             return PartialView(result);
         }
 

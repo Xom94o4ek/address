@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using address.Data;
 using address.Models;
+using address.Log;
 
 namespace address.Controllers
 {
     public class OperationController : Controller
     {
         private readonly AddressSystemContext db;
+        Logger Log = new Logger();
         BaseFilter BaseFilter = new BaseFilter();
         OperationFilter OperationFilter = new OperationFilter();
         public OperationController(AddressSystemContext context)
@@ -436,6 +438,7 @@ namespace address.Controllers
                 {
                     db.Add(regions);
                     await db.SaveChangesAsync();
+                    Log.Info($"[Region:Create][User:{User.Identity.Name}]", regions.RegionName);
                     return RedirectToAction(nameof(RegIndex));
                 }
                 return View(regions);
@@ -456,6 +459,7 @@ namespace address.Controllers
                 {
                     db.Add(areas);
                     await db.SaveChangesAsync();
+                    Log.Info($"[Area:Create][User:{User.Identity.Name}]", areas.AreaName, areas.RegionId);
                     return RedirectToAction(nameof(AreaIndex));
                 }
                 return View(areas);
@@ -477,6 +481,7 @@ namespace address.Controllers
                 {
                     db.Add(localities);
                     await db.SaveChangesAsync();
+                    Log.Info($"[Locality:Create][User:{User.Identity.Name}]", localities.LocalityName, localities.AreaId);
                     return RedirectToAction(nameof(LocIndex));
                 }
                 return View(localities);
@@ -497,6 +502,7 @@ namespace address.Controllers
                 {
                     db.Add(districts);
                     await db.SaveChangesAsync();
+                    Log.Info($"[District:Create][User:{User.Identity.Name}]", districts.DistrictName, districts.LocalityId);
                     return RedirectToAction(nameof(DisIndex));
                 }
                 return View(districts);
@@ -518,6 +524,7 @@ namespace address.Controllers
                 {
                     db.Add(streets);
                     await db.SaveChangesAsync();
+                    Log.Info($"[Street:Create][User:{User.Identity.Name}]", streets.StreetName,streets.DistrictId);
                     return RedirectToAction(nameof(StrIndex));
                 }
                 return View(streets);
@@ -539,6 +546,7 @@ namespace address.Controllers
                 {
                     db.Add(houses);
                     await db.SaveChangesAsync();
+                    Log.Info($"[House:Create][User:{User.Identity.Name}]", houses.HouseNum, houses.Index, houses.Floors, houses.Entrances, houses.Flats, houses.StreetId);
                     return RedirectToAction(nameof(HouseIndex));
                 }
                 return View(houses);
@@ -750,6 +758,7 @@ namespace address.Controllers
                     {
                         db.Update(regions);
                         await db.SaveChangesAsync();
+                        Log.Info($"[Region:Edit][User:{User.Identity.Name}]", regions.RegionId, regions.RegionName);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -790,6 +799,7 @@ namespace address.Controllers
                     {
                         db.Update(areas);
                         await db.SaveChangesAsync();
+                        Log.Info($"[Area:Edit][User:{User.Identity.Name}]", areas.AreaId, areas.AreaName, areas.RegionId);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -829,6 +839,7 @@ namespace address.Controllers
                     {
                         db.Update(localities);
                         await db.SaveChangesAsync();
+                        Log.Info($"[Locality:Edit][User:{User.Identity.Name}]", localities.LocalityId, localities.LocalityName, localities.AreaId);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -868,6 +879,7 @@ namespace address.Controllers
                     {
                         db.Update(districts);
                         await db.SaveChangesAsync();
+                        Log.Info($"[District:Edit][User:{User.Identity.Name}]", districts.DistrictId, districts.DistrictName, districts.LocalityId);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -908,6 +920,7 @@ namespace address.Controllers
                     {
                         db.Update(streets);
                         await db.SaveChangesAsync();
+                        Log.Info($"[Street:Edit][User:{User.Identity.Name}]", streets.StreetId, streets.StreetName, streets.DistrictId);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -948,6 +961,7 @@ namespace address.Controllers
                     {
                         db.Update(houses);
                         await db.SaveChangesAsync();
+                        Log.Info($"[House:Edit][User:{User.Identity.Name}]", houses.HouseId, houses.HouseNum, houses.Index, houses.Floors, houses.Entrances, houses.Flats, houses.StreetId);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
@@ -1007,6 +1021,7 @@ namespace address.Controllers
                 var regions = await db.Regions.FindAsync(id);
                 db.Regions.Remove(regions);
                 await db.SaveChangesAsync();
+                Log.Info($"[Region:Delete][User:{User.Identity.Name}]", regions.RegionId, regions.RegionName);
                 return RedirectToAction(nameof(RegIndex));
             }
         }
@@ -1051,6 +1066,7 @@ namespace address.Controllers
                 var areas = await db.Areas.FindAsync(id);
                 db.Areas.Remove(areas);
                 await db.SaveChangesAsync();
+                Log.Info($"[Area:Delete][User:{User.Identity.Name}]", areas.AreaId, areas.AreaName, areas.RegionId);
                 return RedirectToAction(nameof(AreaIndex));
             }
         }
@@ -1096,6 +1112,7 @@ namespace address.Controllers
                 var localities = await db.Localities.FindAsync(id);
                 db.Localities.Remove(localities);
                 await db.SaveChangesAsync();
+                Log.Info($"[Locality:Delete][User:{User.Identity.Name}]", localities.LocalityId, localities.LocalityName, localities.AreaId);
                 return RedirectToAction(nameof(LocIndex));
             }
         }
@@ -1141,6 +1158,7 @@ namespace address.Controllers
                 var districts = await db.Districts.FindAsync(id);
                 db.Districts.Remove(districts);
                 await db.SaveChangesAsync();
+                Log.Info($"[District:Delete][User:{User.Identity.Name}]", districts.DistrictId, districts.DistrictName, districts.LocalityId);
                 return RedirectToAction(nameof(DisIndex));
             }
         }
@@ -1187,6 +1205,7 @@ namespace address.Controllers
                 var streets = await db.Streets.FindAsync(id);
                 db.Streets.Remove(streets);
                 await db.SaveChangesAsync();
+                Log.Info($"[Street:Delete][User:{User.Identity.Name}]", streets.StreetId, streets.StreetName, streets.DistrictId);
                 return RedirectToAction(nameof(StrIndex));
             }
         }
@@ -1233,6 +1252,7 @@ namespace address.Controllers
                 var houses = await db.Houses.FindAsync(id);
                 db.Houses.Remove(houses);
                 await db.SaveChangesAsync();
+                Log.Info($"[House:Delete][User:{User.Identity.Name}]", houses.HouseId, houses.HouseNum, houses.Index, houses.Floors, houses.Entrances, houses.Flats, houses.StreetId);
                 return RedirectToAction(nameof(HouseIndex));
             }
         }

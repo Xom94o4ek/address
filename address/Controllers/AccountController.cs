@@ -10,12 +10,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using address.Log;
 
 namespace address.Controllers
 {
     public class AccountController : Controller
     {
         private AddressSystemContext db;
+        Logger Log = new Logger();
         public AccountController(AddressSystemContext context)
         {
             db = context;
@@ -39,9 +41,10 @@ namespace address.Controllers
                 if (user != null)
                 {
                     await Authenticate(user.Name); // аутентификация
-
+                    Log.Info($"Пользователь {user.Name} успешно вошёл в систему!");
                     return RedirectToAction("Index", "Home");
                 }
+                Log.Warning($"Неудачная попытка входа пользователя {model.Email}!");
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
             return View(model);
@@ -69,10 +72,11 @@ namespace address.Controllers
                     await db.SaveChangesAsync();
 
                     await Authenticate(model.Name); // аутентификация
-                    
+                    Log.Info($"Зарегистрирован новый пользователь: {model.Name}!");
                     return RedirectToAction("Index", "Home");
                 }
                 else
+                    Log.Warning($"Неудачная попытка регистрации пользователя с Email: {model.Email} и Именем:{model.Name}!");
                     ModelState.AddModelError("", "Данный Email/Пользователь уже используется");
             }
             return View(model);
